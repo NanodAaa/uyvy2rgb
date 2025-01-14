@@ -53,28 +53,52 @@ def yuv2rgb(Y, U, V):
                 u = U[y_index, x_index // 2]
                 v = V[y_index, x_index // 2]
                             
-                """ 
-                # BT.607
+                
+                # BT.601
                 r = np.clip(y + 1.402 * (v - 128), 0, 255)
                 g = np.clip(y - 0.344136 * (u - 128) - 0.714136 * (v - 128), 0, 255)
                 b = np.clip(y + 1.772 * (u - 128), 0, 255)
-                """
+               
+                
+                """ 
+                # BT.601 with offset
+                r = np.clip(y + 1.402 * (v), 0, 255)
+                g = np.clip(y - 0.344136 * (u) - 0.714136 * (v), 0, 255)
+                b = np.clip(y + 1.772 * (u), 0, 255)
+                 """
 
-                """ # BT.709
+                """ 
+                # BT.709 with offset
                 r = 1.164 * y + 1.739 * v - 0.97
                 g = 1.164 * y - 0.213 * u - 0.533 * v + 0.301
-                b = 1.164 * y + 2.112 * u - 1.129 """
+                b = 1.164 * y + 2.112 * u - 1.129 
+                """
 
+                """ 
+                # BT.709
                 r = 1.164 * y + 1.739 * (v-128) - 0.97
                 g = 1.164 * y - 0.213 * (u-128) - 0.533 * (v-128) + 0.301
                 b = 1.164 * y + 2.112 * (u-128) - 1.129
+                """
 
-                rgb_data[y_index, x_index] = [y, y, y]
-#                rgb_data[y_index, x_index] = [r, g, b]
-#                rgb_data[i // IMAGE_WIDTH, i % IMAGE_WIDTH] = [y, u, v]
-#                rgb_data[i // IMAGE_WIDTH, i % IMAGE_WIDTH] = [y, v, u]
-#                rgb_data[i // IMAGE_WIDTH, i % IMAGE_WIDTH] = [u, y, v]
-#                rgb_data[i // IMAGE_WIDTH, i % IMAGE_WIDTH] = [u, v, y]      
+                rgb_data[y_index, x_index] = [r, g, b]    
+#                rgb_data[y_index, x_index] = [b, b, b]
+#                rgb_data[y_index, x_index] = [g, g, g]
+#                rgb_data[y_index, x_index] = [g, r, b]
+#                rgb_data[y_index, x_index] = [g, b, r]
+#                rgb_data[y_index, x_index] = [b, r, g]
+#                rgb_data[y_index, x_index] = [b, g, r]
+#                rgb_data[y_index, x_index] = [r, b, g]
+#                rgb_data[y_index, x_index] = [r, r, r]
+#                rgb_data[y_index, x_index] = [u, u, u]
+#                rgb_data[y_index, x_index] = [v, v, v]
+#                rgb_data[y_index, x_index] = [v, u, y]
+#                rgb_data[y_index, x_index] = [v, y, u]
+#                rgb_data[y_index, x_index] = [u, v, y]
+#                rgb_data[y_index, x_index] = [u, y, v]
+#                rgb_data[y_index, x_index] = [y, v, u]
+#                rgb_data[y_index, x_index] = [y, u, v]
+#                rgb_data[y_index, x_index] = [y, y, y]
                     
         np.save(os.path.join(FILE_DIRNAME, 'rgbdata_3d.npy'), rgb_data)
     
