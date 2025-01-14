@@ -1,21 +1,27 @@
 import numpy as np
 
-# 设置图像的宽和高
-width = 640
-height = 480
+def get_yuv_image_dimensions(file_path):
+    # 打开YUV文件
+    with open(file_path, 'rb') as f:
+        # 读取整个文件内容
+        yuv_data = f.read()
 
-# 创建一个包含红色的UYVY数据
-uyvy_data = np.zeros((height, width, 2), dtype=np.uint8)
+    # 获取文件的总字节数
+    file_size = len(yuv_data)
 
-# 填充数据，红色的UYVY分量：U = 0, Y = 76, V = 255
-for i in range(height):
-    for j in range(width):
-        # 每个像素的UYVY值：U, Y, V, Y
-        uyvy_data[i, j] = [0, 76, 255]  # U, Y, V
+    # 计算图像的宽度和高度
+    # UYVY格式每四个字节代表两个像素
+    # 每两个Y分量占两个字节，每个U、V分量占一个字节
+    # 图像的像素数量是文件大小除以4
+    num_pixels = file_size // 4
 
-# 将数据保存为文件
-uyvy_data = uyvy_data.flatten()
-with open('red_image.uyvy', 'wb') as f:
-    f.write(uyvy_data.tobytes())
+    # 假设图像的宽度是1920，计算高度
+    width = 1920  # 可以根据实际情况调整宽度
+    height = num_pixels // width  # 高度是像素数除以宽度
 
-print("红色UYVY文件生成成功！")
+    return width, height
+
+# 示例用法
+file_path = r'D:\NanodAaa\WORK\EM728\EM728\EM728_RGB彩条.yuv'  # 需要处理的YUV文件路径
+width, height = get_yuv_image_dimensions(file_path)
+print(f"图像的宽度: {width}, 高度: {height}")
