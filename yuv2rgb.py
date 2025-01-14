@@ -47,43 +47,35 @@ def yuv2rgb(Y, U, V):
     rgb_data = np.zeros((IMAGE_HEIGHT, IMAGE_WIDTH, 3), dtype=np.uint8)
     
     if not os.path.exists(os.path.join(FILE_DIRNAME, 'rgbdata_3d.npy')):
-        for i in tqdm(range(IMAGE_SIZE), desc='Converting uyvy to rgb', ncols=100):
-    #    for i in range(IMAGE_SIZE):
-    
-            """ 
-            x_index = (i // 2) % UV_WIDTH
-            y_index = (i // 2) // UV_WIDTH 
-            """
-            x_index = (i % IMAGE_WIDTH) // 2
-            y_index = i // (2 * IMAGE_WIDTH)
-            
-            y = Y[i // Y_WIDTH, i % Y_WIDTH]
-            
-            u = U[y_index, x_index]
-            v = V[y_index, x_index]
-            
-                        
-            r = np.clip(y + 1.402 * (v - 128), 0, 255)
-            g = np.clip(y - 0.344136 * (u - 128) - 0.714136 * (v - 128), 0, 255)
-            b = np.clip(y + 1.772 * (u - 128), 0, 255)
-           
+        for y_index in tqdm(range(IMAGE_HEIGHT), desc='Converting uyvy to rgb', ncols=100):
+           for x_index in range(IMAGE_WIDTH):
+                y = Y[y_index, x_index]
+                u = U[y_index, x_index // 2]
+                v = V[y_index, x_index // 2]
+                            
+                """ 
+                # BT.607
+                r = np.clip(y + 1.402 * (v - 128), 0, 255)
+                g = np.clip(y - 0.344136 * (u - 128) - 0.714136 * (v - 128), 0, 255)
+                b = np.clip(y + 1.772 * (u - 128), 0, 255)
+                """
 
-            """ # BT.709
-            r = 1.164 * y + 1.739 * v - 0.97
-            g = 1.164 * y - 0.213 * u - 0.533 * v + 0.301
-            b = 1.164 * y + 2.112 * u - 1.129 """
+                """ # BT.709
+                r = 1.164 * y + 1.739 * v - 0.97
+                g = 1.164 * y - 0.213 * u - 0.533 * v + 0.301
+                b = 1.164 * y + 2.112 * u - 1.129 """
 
-            """ r = 1.164 * y + 1.739 * (v-128) - 0.97
-            g = 1.164 * y - 0.213 * (u-128) - 0.533 * (v-128) + 0.301
-            b = 1.164 * y + 2.112 * (u-128) - 1.129 """
+                r = 1.164 * y + 1.739 * (v-128) - 0.97
+                g = 1.164 * y - 0.213 * (u-128) - 0.533 * (v-128) + 0.301
+                b = 1.164 * y + 2.112 * (u-128) - 1.129
 
-            
-            rgb_data[i // IMAGE_WIDTH, i % IMAGE_WIDTH] = [r, g, b]
-#            rgb_data[i // IMAGE_WIDTH, i % IMAGE_WIDTH] = [y, u, v]
-#            rgb_data[i // IMAGE_WIDTH, i % IMAGE_WIDTH] = [y, v, u]
-#            rgb_data[i // IMAGE_WIDTH, i % IMAGE_WIDTH] = [u, y, v]
-#            rgb_data[i // IMAGE_WIDTH, i % IMAGE_WIDTH] = [u, v, y]      
-                 
+                rgb_data[y_index, x_index] = [y, y, y]
+#                rgb_data[y_index, x_index] = [r, g, b]
+#                rgb_data[i // IMAGE_WIDTH, i % IMAGE_WIDTH] = [y, u, v]
+#                rgb_data[i // IMAGE_WIDTH, i % IMAGE_WIDTH] = [y, v, u]
+#                rgb_data[i // IMAGE_WIDTH, i % IMAGE_WIDTH] = [u, y, v]
+#                rgb_data[i // IMAGE_WIDTH, i % IMAGE_WIDTH] = [u, v, y]      
+                    
         np.save(os.path.join(FILE_DIRNAME, 'rgbdata_3d.npy'), rgb_data)
     
     else:
