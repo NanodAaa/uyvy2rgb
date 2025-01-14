@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-from tqdm import tqdm
+from tqdm import tqdm   # pip install
 
 def read_uyvy(file_path): 
     if (not os.path.exists(os.path.join(FILE_DIRNAME, 'Y.txt'))) or (not os.path.exists(os.path.join(FILE_DIRNAME, 'U.txt'))) or (not os.path.exists(os.path.join(FILE_DIRNAME, 'V.txt'))):
@@ -62,10 +62,22 @@ def yuv2rgb(Y, U, V):
             u = U[y_index, x_index]
             v = V[y_index, x_index]
             
+            """             
             r = np.clip(y + 1.402 * (v - 128), 0, 255)
             g = np.clip(y - 0.344136 * (u - 128) - 0.714136 * (v - 128), 0, 255)
             b = np.clip(y + 1.772 * (u - 128), 0, 255)
+            """
 
+            """ # BT.709
+            r = 1.164 * y + 1.739 * v - 0.97
+            g = 1.164 * y - 0.213 * u - 0.533 * v + 0.301
+            b = 1.164 * y + 2.112 * u - 1.129 """
+
+            r = 1.164 * y + 1.739 * (v-128) - 0.97
+            g = 1.164 * y - 0.213 * (u-128) - 0.533 * (v-128) + 0.301
+            b = 1.164 * y + 2.112 * (u-128) - 1.129
+
+            # BT.709
             rgb_data[i // IMAGE_WIDTH, i % IMAGE_WIDTH] = [r, g, b]
 #            rgb_data[i // IMAGE_WIDTH, i % IMAGE_WIDTH] = [y, u, v]
 #            rgb_data[i // IMAGE_WIDTH, i % IMAGE_WIDTH] = [y, v, u]
@@ -87,7 +99,7 @@ def yuv2rgb(Y, U, V):
     
 if __name__ == '__main__':
     IMAGE_WIDTH = 1920
-    IMAGE_HEIGHT = 1080
+    IMAGE_HEIGHT = 1536
     IMAGE_SIZE = IMAGE_WIDTH * IMAGE_HEIGHT
     Y_WIDTH = IMAGE_WIDTH
     Y_HEIGHT = IMAGE_HEIGHT
