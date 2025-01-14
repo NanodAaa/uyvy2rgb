@@ -59,20 +59,6 @@ def yuv2rgb(Y, U, V):
                 g = np.clip(y - 0.344136 * (u - 128) - 0.714136 * (v - 128), 0, 255)
                 b = np.clip(y + 1.772 * (u - 128), 0, 255)
                
-                
-                """ 
-                # BT.601 with offset
-                r = np.clip(y + 1.402 * (v), 0, 255)
-                g = np.clip(y - 0.344136 * (u) - 0.714136 * (v), 0, 255)
-                b = np.clip(y + 1.772 * (u), 0, 255)
-                 """
-
-                """ 
-                # BT.709 with offset
-                r = 1.164 * y + 1.739 * v - 0.97
-                g = 1.164 * y - 0.213 * u - 0.533 * v + 0.301
-                b = 1.164 * y + 2.112 * u - 1.129 
-                """
 
                 """ 
                 # BT.709
@@ -82,24 +68,7 @@ def yuv2rgb(Y, U, V):
                 """
 
                 rgb_data[y_index, x_index] = [r, g, b]    
-#                rgb_data[y_index, x_index] = [b, b, b]
-#                rgb_data[y_index, x_index] = [g, g, g]
-#                rgb_data[y_index, x_index] = [g, r, b]
-#                rgb_data[y_index, x_index] = [g, b, r]
-#                rgb_data[y_index, x_index] = [b, r, g]
-#                rgb_data[y_index, x_index] = [b, g, r]
-#                rgb_data[y_index, x_index] = [r, b, g]
-#                rgb_data[y_index, x_index] = [r, r, r]
-#                rgb_data[y_index, x_index] = [u, u, u]
-#                rgb_data[y_index, x_index] = [v, v, v]
-#                rgb_data[y_index, x_index] = [v, u, y]
-#                rgb_data[y_index, x_index] = [v, y, u]
-#                rgb_data[y_index, x_index] = [u, v, y]
-#                rgb_data[y_index, x_index] = [u, y, v]
-#                rgb_data[y_index, x_index] = [y, v, u]
-#                rgb_data[y_index, x_index] = [y, u, v]
-#                rgb_data[y_index, x_index] = [y, y, y]
-                    
+
         np.save(os.path.join(FILE_DIRNAME, 'rgbdata_3d.npy'), rgb_data)
     
     else:
@@ -108,8 +77,6 @@ def yuv2rgb(Y, U, V):
     print("R channel min:", rgb_data[..., 0].min(), "max:", rgb_data[..., 0].max())
     print("G channel min:", rgb_data[..., 1].min(), "max:", rgb_data[..., 1].max())
     print("B channel min:", rgb_data[..., 2].min(), "max:", rgb_data[..., 2].max())
-        
-        #rgb_data[i // IMAGE_WIDTH, i % IMAGE_WIDTH] = [y, u, v]
         
     return rgb_data
     
