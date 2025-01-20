@@ -93,8 +93,8 @@ if __name__ == '__main__':
     FILE_DIRNAME = os.path.dirname(__file__)
     FILE_PATH = os.path.join(FILE_DIRNAME, 'EM728_RGB彩条.yuv')
     
-#    regenerate_flag = input('If regenerate all data?(y/n):').lower()
-    regenerate_flag = 'y'
+    regenerate_flag = input('If regenerate all data?(y/n):').lower()
+#    regenerate_flag = 'y'
 #    regenerate_flag = 'n'
     if regenerate_flag == 'y':
         if os.path.exists(os.path.join(FILE_DIRNAME, 'Y.txt')):
